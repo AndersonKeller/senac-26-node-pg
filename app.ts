@@ -1,6 +1,7 @@
 import { userRoutes } from './src/routes/user.routes';
 import expres from "express"
 import { connection } from "./connection"
+import { handleErrors } from './error';
 //CONNECTION IMPORTADA PARA O APP USAR
 
 const app = expres()
@@ -16,3 +17,5 @@ app.use("/user", userRoutes)
 app.listen(3000, () => {
     console.log("Server rodando na porta 3000")
 })
+
+app.use(handleErrors);
