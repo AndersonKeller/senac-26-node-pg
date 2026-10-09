@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getUsersService } from "../services/user/getUsers.service";
-import { ReturnUser } from "../schemas/user.schemas";
+import { CreateUser, ReturnUser } from "../schemas/user.schemas";
+import { createUserService } from "../services/user/createUser.service";
 
 export const userController = {
     //tipo a request e a resposta do express
@@ -14,6 +15,13 @@ export const userController = {
         //controller devolve a resposta
         res.status(200).json(users)
     },
-    async createUser() { },
+    async createUser(req:Request,res:Response) { 
+        const userData:CreateUser = req.body
+
+        const user:ReturnUser = await createUserService(userData)
+
+        res.status(201).json(user)
+
+    },
     async updateUser(){}
 }

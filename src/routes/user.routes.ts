@@ -1,5 +1,6 @@
 import { userController } from '../controllers/user.controller';
-import { CreateUser } from '../schemas/user.schemas';
+import { validateDataValidMiddleware } from '../middleware/validateData.middleware';
+import { CreateUser, createUserSchema } from '../schemas/user.schemas';
 import { connection } from './../../connection';
 import { Router } from "express"
 
@@ -7,17 +8,7 @@ export const userRoutes: Router = Router()
 
 userRoutes.get("", userController.getUsers)
 
-userRoutes.post("", async (req, res) => {
-    const userData: CreateUser = req.body
-    console.log(userData, 'userdata')
-    //VALIDAR OS DADOS NA ENTRADA
-    //EXIBIR OS ERROS DE ACORDO
-
-    const user = await connection.query(`insert into "user" ("username","password","email") 
-        values('${userData.username}','${userData.password}','${userData.email}') returning *;`)
-
-    res.status(201).json(user.rows[0])
-})
+userRoutes.post("", validateDataValidMiddleware(createUserSchema), userController.createUser)
 
 userRoutes.get("/:id", async (req, res) => {
     const userId: string = req.params.id
